@@ -72,6 +72,8 @@ This repository provides a set of scripts designed to automate actions within th
    - Log absolute and relative coordinates in `grid_offsets.txt` (saved to your Desktop).
    - Take a screenshot of the mirrored window and save it as `grid_screenshot.png` on the Desktop.
 
+https://github.com/user-attachments/assets/e0bcd0ff-8393-458c-a884-27a666c034c6
+
 ### 2. Interactive Calibration (Python)
 
 1. Open a terminal and navigate to the directory containing `screenOffset.py`.  
@@ -86,6 +88,8 @@ This repository provides a set of scripts designed to automate actions within th
    - c to commit and save the final offsets
    - q to quit without saving
 4. Once committed, a file called `calibrated_offsets.txt` is created. This file maps each grid cell to precise (x, y) coordinates on the screenshot.
+
+https://github.com/user-attachments/assets/e8c3e85b-4713-427e-a4cc-1678e992cd2f
 
 ### 3. Taking Screenshots (screenshotter.scpt)
 
@@ -109,17 +113,20 @@ For consistent screenshots to be used in generating scripts:
 3. Each action is appended to `GeneratedActions.scpt`, which is created (or updated) automatically.
 4. Press q in the image window when finished.
 
+https://github.com/user-attachments/assets/6ee89857-94f1-492f-9bcf-156a3549787c
+
 ### 5. Executing the Generated AppleScript
 
 - Open or double-click `GeneratedActions.scpt` to run it.
 - Ensure that "iPhone Mirroring" is open.
 - The AppleScript will perform the clicks/typing you specified at the correct coordinates.
 
+https://github.com/user-attachments/assets/9ec2ddc6-58c7-4862-b58a-be77a7113284
+
 ---
 
 ## Repository Structure
 
-.
  |── calibration.scpt          # AppleScript for grid-based calibration  
  |── screenshotter.scpt        # AppleScript to capture a standardized screenshot  
  |── screenOffset.py           # Python script for interactive offset refinement  

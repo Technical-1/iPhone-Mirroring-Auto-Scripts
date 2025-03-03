@@ -42,7 +42,10 @@ This repository provides a set of scripts designed to automate actions within th
 
 - macOS (for the iPhone Mirroring app and AppleScript)
 - [Python 3.x](https://www.python.org/)
-- [OpenCV for Python](https://opencv.org/) (`pip install opencv-python`)
+- [OpenCV for Python](https://opencv.org/) 
+    ```
+    pip install opencv-python
+    ```
 - [cliclick](https://github.com/BlueM/cliclick) installed via Homebrew or similar:  
   ```bash
   brew install cliclick
@@ -73,7 +76,7 @@ This repository provides a set of scripts designed to automate actions within th
 
 1. Open a terminal and navigate to the directory containing `screenOffset.py`.  
 2. Run (adjust paths as needed):
-    ```bash
+    ```
     python3 screenOffset.py /path/to/grid_screenshot.png /path/to/grid_offsets.txt
     ```
 
@@ -96,8 +99,9 @@ For consistent screenshots to be used in generating scripts:
 ### 4. Generating AppleScript Snippets (Python)
 
 1. After you have a screenshot (via `screenshotter.scpt`), run:
-
+    ```
     python3 applescriptgen.py /path/to/screenshot.png /path/to/calibrated_offsets.txt
+    ```
 
 2. A window named "Phone Automation Builder" appears. Each time you click in the image:
    - You’ll be prompted in the terminal to choose whether it’s a (c)lick or (t)ype action.
@@ -116,10 +120,10 @@ For consistent screenshots to be used in generating scripts:
 ## Repository Structure
 
 .
-├── calibration.scpt          # AppleScript for grid-based calibration  
-├── screenshotter.scpt        # AppleScript to capture a standardized screenshot  
-├── screenOffset.py           # Python script for interactive offset refinement  
-├── applescriptgen.py         # Python script to build AppleScript snippets  
+ |── calibration.scpt          # AppleScript for grid-based calibration  
+ |── screenshotter.scpt        # AppleScript to capture a standardized screenshot  
+ |── screenOffset.py           # Python script for interactive offset refinement  
+ |── applescriptgen.py         # Python script to build AppleScript snippets  
 └── README.md                 # This file  
 
 ---

@@ -124,7 +124,7 @@ end tell
 def main():
     global img_display, global_winW, global_winH, global_scr_w, global_scr_h, output_file
     parser = argparse.ArgumentParser(
-        description="Interactive Action Builder using calibrated offsets and screenshot."
+        description="Phone Automation Builder using calibrated offsets and screenshot."
     )
     parser.add_argument("screenshot", help="Path to the screenshot file")
     parser.add_argument("calibrated_offsets", help="Path to the calibrated_offsets.txt file")

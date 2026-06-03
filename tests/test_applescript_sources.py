@@ -1,4 +1,5 @@
 # tests/test_applescript_sources.py
+import pathlib
 import shutil
 import subprocess
 
@@ -52,8 +53,6 @@ def test_type_snippet_with_only_whitespace_compiles(tmp_path):
     )
     assert result.returncode == 0, result.stderr
 
-
-import pathlib
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 APPLESCRIPT_SOURCES = ["Calibration.applescript", "Screenshotter.applescript"]

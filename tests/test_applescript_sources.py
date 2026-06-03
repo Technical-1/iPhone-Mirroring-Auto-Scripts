@@ -30,3 +30,24 @@ def test_generated_script_compiles(tmp_path):
     )
     assert result.returncode == 0, result.stderr
     assert out.exists()
+
+
+@requires_osacompile
+def test_type_snippet_with_only_whitespace_compiles(tmp_path):
+    # Text that is only a newline / only a tab emits a bare return/tab
+    # constant; confirm `keystroke return` style still compiles end-to-end.
+    script = (
+        build_header()
+        + build_type_snippet(0, 0, "\n")
+        + "\n"
+        + build_type_snippet(0, 0, "\t")
+    )
+    src = tmp_path / "ws.applescript"
+    src.write_text(script)
+    out = tmp_path / "ws.scpt"
+    result = subprocess.run(
+        [osacompile, "-o", str(out), str(src)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr

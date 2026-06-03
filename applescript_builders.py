@@ -13,6 +13,11 @@ def applescript_string_literal(text):
     escaped. Newlines and tabs cannot appear inside an AppleScript string
     literal, so they are emitted as ``return`` / ``tab`` keyword tokens joined
     with ``&``. Example: ``a\\tb`` -> ``"a" & tab & "b"``.
+
+    A string made only of newlines/tabs returns the bare ``return``/``tab``
+    constant(s) (e.g. ``"\\n"`` -> ``return``). This is intentional and valid:
+    ``keystroke return`` types a newline. The result is always a valid
+    AppleScript expression usable directly after ``keystroke``.
     """
     if text == "":
         return '""'
@@ -70,7 +75,11 @@ def build_header():
 
 
 def build_click_snippet(rel_x, rel_y):
-    """AppleScript that clicks at (winX+rel_x, winY+rel_y) via cliclick."""
+    """AppleScript that clicks at (winX+rel_x, winY+rel_y) via cliclick.
+
+    rel_x and rel_y must be ints (they are interpolated into the AppleScript
+    source verbatim); callers are responsible for casting.
+    """
     return (
 f'''set actionOffsetX to {rel_x}
 set actionOffsetY to {rel_y}
@@ -93,6 +102,9 @@ def build_type_snippet(rel_x, rel_y, text):
 
     Focus is re-asserted immediately before the keystroke so an earlier delay
     or focus change cannot misroute keys to another app (Project Hub #8).
+
+    rel_x and rel_y must be ints (interpolated verbatim); text may contain any
+    characters and is escaped via applescript_string_literal.
     """
     literal = applescript_string_literal(text)
     return (

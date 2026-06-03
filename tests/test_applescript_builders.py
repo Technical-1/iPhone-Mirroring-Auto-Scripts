@@ -30,6 +30,17 @@ def test_leading_newline_has_no_empty_quote():
     assert applescript_string_literal("\nx") == 'return & "x"'
 
 
+def test_only_newline_is_bare_return_constant():
+    # `return` is the AppleScript carriage-return constant; `keystroke return`
+    # is valid and types a newline. Locking this so it is never "fixed" into
+    # an empty-quote-prefixed expression.
+    assert applescript_string_literal("\n") == "return"
+
+
+def test_only_tab_is_bare_tab_constant():
+    assert applescript_string_literal("\t") == "tab"
+
+
 from applescript_builders import build_header
 
 

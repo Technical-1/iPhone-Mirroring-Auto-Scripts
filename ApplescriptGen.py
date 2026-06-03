@@ -3,6 +3,8 @@ import argparse
 import re
 import sys
 
+from applescript_builders import build_header, build_click_snippet, build_type_snippet
+
 def parse_calibrated_offsets(file_path):
     """
     Parses the calibrated_offsets.txt file.
@@ -48,21 +50,14 @@ global_scr_h = None
 img_display = None
 output_file = "GeneratedActions.scpt"
 
-def write_header_if_needed():
+def reset_output_file():
+    """Start a fresh GeneratedActions.scpt for this session.
+
+    Truncates any existing file and writes the AppleScript header once. Actions
+    are appended during the session as the user clicks.
     """
-    Writes the AppleScript header to output_file if it's not already present.
-    This header will only be written once at the top of the file.
-    """
-    header = (
-        'tell application "System Events"\n'
-        '    tell process "iPhone Mirroring"\n'
-        '        set frontmost to true\n'
-        '        set {winX, winY} to position of UI element 1\n'
-        '    end tell\n'
-        'end tell\n\n'
-    )
     with open(output_file, "w") as f:
-        f.write(header)
+        f.write(build_header())
     print("Header written to GeneratedActions.scpt")
 
 def mouse_callback(event, x, y, flags, param):
@@ -76,34 +71,12 @@ def mouse_callback(event, x, y, flags, param):
         action_type = input("Enter action for this point - (c)lick or (t)ype: ").strip().lower()
         snippet = ""
         if action_type == 'c':
-            snippet = (
-f'''set actionOffsetX to {rel_offset_x}
-set actionOffsetY to {rel_offset_y}
-
-set clickX to winX + actionOffsetX
-set clickY to winY + actionOffsetY
-
-do shell script "/opt/homebrew/bin/cliclick c:" & (clickX as integer) & "," & (clickY as integer)
-delay 0.5
-''')
+            snippet = build_click_snippet(rel_offset_x, rel_offset_y)
             marker_color = (0, 255, 0)  # Green for click
             label = "CLICK"
         elif action_type == 't':
-            text_to_type = input("Enter the text to type: ").strip()
-            snippet = (
-f'''set actionOffsetX to {rel_offset_x}
-set actionOffsetY to {rel_offset_y}
-
-set clickX to winX + actionOffsetX
-set clickY to winY + actionOffsetY
-
-do shell script "/opt/homebrew/bin/cliclick c:" & (clickX as integer) & "," & (clickY as integer)
-delay 0.5
-tell application "System Events"
-    keystroke "{text_to_type}"
-    delay 0.5
-end tell
-''')
+            text_to_type = input("Enter the text to type: ")
+            snippet = build_type_snippet(rel_offset_x, rel_offset_y, text_to_type)
             marker_color = (0, 0, 255)  # Red for type
             label = "TYPE"
         else:
@@ -131,7 +104,7 @@ def main():
     args = parser.parse_args()
     
     # Write header if needed.
-    write_header_if_needed()
+    reset_output_file()
     
     # Load the screenshot image.
     img = cv2.imread(args.screenshot)

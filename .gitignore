@@ -1,3 +1,5 @@
 calibrated_offsets.txt
 GeneratedActions.scpt
 .DS_Store
+__pycache__/
+*.pyc

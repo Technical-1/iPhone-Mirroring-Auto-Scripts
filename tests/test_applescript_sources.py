@@ -1,4 +1,5 @@
 # tests/test_applescript_sources.py
+import pathlib
 import shutil
 import subprocess
 
@@ -51,3 +52,28 @@ def test_type_snippet_with_only_whitespace_compiles(tmp_path):
         text=True,
     )
     assert result.returncode == 0, result.stderr
+
+
+REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
+APPLESCRIPT_SOURCES = ["Calibration.applescript", "Screenshotter.applescript"]
+
+
+@requires_osacompile
+@pytest.mark.parametrize("src_name", APPLESCRIPT_SOURCES)
+def test_applescript_source_compiles(tmp_path, src_name):
+    src = REPO_ROOT / src_name
+    assert src.exists(), f"missing source: {src_name}"
+    out = tmp_path / (src_name + ".scpt")
+    result = subprocess.run(
+        [osacompile, "-o", str(out), str(src)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_calibration_click_count_is_configurable_and_defaults_to_one():
+    text = (REPO_ROOT / "Calibration.applescript").read_text()
+    assert "set clicksPerCell to 1" in text          # default is a single click
+    assert "repeat clicksPerCell times" in text       # loop is driven by the config
+    assert "repeat with x from 0 to 4" not in text    # the old hardcoded 5x loop is gone

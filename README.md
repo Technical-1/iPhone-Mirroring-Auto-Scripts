@@ -50,6 +50,9 @@ This repository provides a set of scripts designed to automate actions within th
   ```bash
   brew install cliclick
   ```
+  The scripts locate `cliclick` automatically at runtime (`command -v cliclick`), so it works on both Apple Silicon (`/opt/homebrew/bin`) and Intel (`/usr/local/bin`). If it isn't installed, the scripts show an install hint and stop.
+
+> **Tests (optional):** the Python helpers are covered by a small `pytest` suite. Install with `pip install -r requirements-dev.txt` and run `python3 -m pytest`.
 
 ---
 
@@ -71,6 +74,8 @@ This repository provides a set of scripts designed to automate actions within th
    - Click through the grid of points.
    - Log absolute and relative coordinates in `grid_offsets.txt` (saved to your Desktop).
    - Take a screenshot of the mirrored window and save it as `grid_screenshot.png` on the Desktop.
+
+   By default each grid point is clicked once. To issue repeated taps per point (e.g. to defeat input debouncing), change `set clicksPerCell to 1` near the top of `Calibration.applescript` and recompile.
 
 https://github.com/user-attachments/assets/e0bcd0ff-8393-458c-a884-27a666c034c6
 
@@ -127,16 +132,32 @@ https://github.com/user-attachments/assets/9ec2ddc6-58c7-4862-b58a-be77a7113284
 
 ## Repository Structure
 
- |── calibration.scpt          # AppleScript for grid-based calibration  
- |── screenshotter.scpt        # AppleScript to capture a standardized screenshot  
- |── screenOffset.py           # Python script for interactive offset refinement  
- |── applescriptgen.py         # Python script to build AppleScript snippets  
-└── README.md                 # This file  
+```
+iPhone-Mirroring-Auto-Scripts/
+├── Calibration.applescript     # Source for the grid-calibration script
+├── Calibration.scpt            # Compiled calibration script (run this)
+├── Screenshotter.applescript   # Source for the standardized-screenshot script
+├── Screenshotter.scpt          # Compiled screenshot script (run this)
+├── ScreenOffset.py             # Interactive overlay alignment (OpenCV)
+├── ApplescriptGen.py           # Interactive action builder → GeneratedActions.scpt
+├── applescript_builders.py     # Pure helpers that emit valid AppleScript snippets
+├── tests/                      # pytest suite for the builders + osacompile checks
+├── requirements-dev.txt        # Dev/test dependencies (pytest)
+└── README.md                   # This file
+```
+
+The `.applescript` files are the editable source of truth. After changing one, recompile it:
+
+```bash
+osacompile -o Calibration.scpt Calibration.applescript
+```
 
 ---
 
 ## Notes & Tips
 
 - `screenOffset.py` relies on OpenCV to display and update the overlay. Make sure OpenCV (pip install opencv-python) is installed and available on your system.
-- `cliclick` must be installed in /opt/homebrew/bin/cliclick or you must modify the scripts to point to your local installation path.
+- `cliclick` is located automatically at runtime, so no path editing is needed on either Apple Silicon or Intel Macs.
+- Every shell call (`cliclick`, `screencapture`) is wrapped in error handling: if a binary is missing or a permission is denied, the script shows an actionable dialog instead of failing silently.
+- Typed text passed to the action builder is safely escaped (quotes, backslashes, newlines, tabs), so generated scripts always compile.
 - If you run into permission issues on macOS (e.g., controlling the screen or simulating clicks), grant the necessary Accessibility and Screen Recording permissions in System Preferences.

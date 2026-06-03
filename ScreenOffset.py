@@ -3,7 +3,6 @@ import cv2
 import re
 import argparse
 import sys
-import os
 
 def parse_grid_offsets(log_file):
     """

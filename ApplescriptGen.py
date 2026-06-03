@@ -1,9 +1,7 @@
 import cv2
-import numpy as np
 import argparse
 import re
 import sys
-import os
 
 def parse_calibrated_offsets(file_path):
     """
@@ -121,12 +119,12 @@ end tell
         # Draw a marker on the display image.
         cv2.circle(img_display, (x, y), 10, marker_color, -1)
         cv2.putText(img_display, label, (x + 10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, marker_color, 2)
-        cv2.imshow("Interactive Action Builder", img_display)
+        cv2.imshow("Phone Automation Builder", img_display)
 
 def main():
     global img_display, global_winW, global_winH, global_scr_w, global_scr_h, output_file
     parser = argparse.ArgumentParser(
-        description="Interactive Action Builder using calibrated offsets and screenshot."
+        description="Phone Automation Builder using calibrated offsets and screenshot."
     )
     parser.add_argument("screenshot", help="Path to the screenshot file")
     parser.add_argument("calibrated_offsets", help="Path to the calibrated_offsets.txt file")
